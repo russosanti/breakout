@@ -28,6 +28,7 @@ function PlayState:enter(params)
     self.highScores = params.highScores
     self.ball = params.ball
     self.level = params.level
+    self.powerUps = {}
 
     self.recoverPoints = params.recoverPoints
 
@@ -96,6 +97,15 @@ function PlayState:update(dt)
 
             -- trigger the brick's hit function, which removes it from play
             brick:hit()
+
+            if math.random(4) == 1 then
+            --if brick.inPlay == false and math.random(4) == 1 then
+                local type = 2
+                if self.health < 3 then
+                    type = math.random(1, 2)
+                end
+                table.insert(self.powerUps, PowerUp(type, brick.x + brick.width / 2 - 8, brick.y))
+            end
 
             -- if we have enough points, recover a point of health
             if self.score > self.recoverPoints then
@@ -196,6 +206,28 @@ function PlayState:update(dt)
         brick:update(dt)
     end
 
+    -- for rendering power-ups
+    for k, powers in pairs(self.powerUps) do
+        powers:update(dt)
+        if powers:collides(self.paddle) then
+            powers.inPlay = false
+            -- Handle power-up collision logic hereby
+            if powers.type == 1 and self.health < 3 then
+                self.health = self.health + 1
+                gSounds['recover']:play()
+            elseif powers.type == 2 then
+                -- Two balls logic
+            end
+        end
+    end
+
+    -- removes power ups off play
+    for i = #self.powerUps, 1, -1 do
+        if not self.powerUps[i].inPlay then
+            table.remove(self.powerUps, i)
+        end
+    end
+
     if love.keyboard.wasPressed('escape') then
         love.event.quit()
     end
@@ -210,6 +242,11 @@ function PlayState:render()
     -- render all particle systems
     for k, brick in pairs(self.bricks) do
         brick:renderParticles()
+    end
+
+        -- render all particle systems
+    for k, powers in pairs(self.powerUps) do
+        powers:render()
     end
 
     self.paddle:render()

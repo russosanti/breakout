@@ -122,3 +122,20 @@ function GenerateQuadsBalls(atlas)
 
     return quads
 end
+
+
+--[[
+    This function is specifically made to piece out the power-ups from the
+    sprite sheet. For this, we have to piece out the power-ups manually on the last line.
+]]
+function GenerateQuadsPowerUps(atlas)
+    local y = 192
+
+    local quads = {}
+
+    quads[1] = love.graphics.newQuad(16*2, y, 16, 16, atlas:getDimensions())
+    quads[2] = love.graphics.newQuad(16*8, y, 16, 16, atlas:getDimensions())
+    quads[3] = love.graphics.newQuad(16*9, y, 16, 16, atlas:getDimensions())
+
+    return quads
+end
