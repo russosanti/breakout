@@ -32,9 +32,11 @@ function VictoryState:update(dt)
 
     -- go to play screen if the player presses Enter
     if love.keyboard.wasPressed('enter') or love.keyboard.wasPressed('return') then
+        local bricks, lockCount = LevelMaker.createMap(self.level + 1)
         gStateMachine:change('serve', {
             level = self.level + 1,
-            bricks = LevelMaker.createMap(self.level + 1),
+            bricks = bricks,
+            lockCount = lockCount,
             paddle = self.paddle,
             health = self.health,
             score = self.score,

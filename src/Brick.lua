@@ -54,6 +54,7 @@ function Brick:init(x, y)
     -- used for coloring and score calculation
     self.tier = 0
     self.color = 1
+    self.isLock = false
 
     self.x = x
     self.y = y
@@ -135,11 +136,15 @@ end
 
 function Brick:render()
     if self.inPlay then
-        love.graphics.draw(gTextures['main'],
-            -- multiply color by 4 (-1) to get our color offset, then add tier to that
-            -- to draw the correct tier and color brick onto the screen
-            gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
-            self.x, self.y)
+        if self.isLock then
+            love.graphics.draw(gTextures['main'], gFrames['bricks'][22], self.x, self.y)
+        else
+            love.graphics.draw(gTextures['main'],
+                -- multiply color by 4 (-1) to get our color offset, then add tier to that
+                -- to draw the correct tier and color brick onto the screen
+                gFrames['bricks'][1 + ((self.color - 1) * 4) + self.tier],
+                self.x, self.y)
+        end
     end
 end
 
@@ -149,4 +154,13 @@ end
 ]]
 function Brick:renderParticles()
     love.graphics.draw(self.psystem, self.x + 16, self.y + 8)
+end
+
+--[[
+    Set Lock Brick as a lock block
+]]
+function Brick:setAsLock()
+    self.isLock = true
+    self.tier = 0
+    self.color = 1
 end

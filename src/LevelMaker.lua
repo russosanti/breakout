@@ -120,6 +120,41 @@ function LevelMaker.createMap(level)
     if #bricks == 0 then
         return self.createMap(level)
     else
-        return bricks
+        return createLockBricks(level, bricks)
     end
+end
+
+
+--[[
+    Randomly set some bricks as lock bricks based on the level.
+]]
+function createLockBricks(level, bricks)
+    local maxLocks = 0
+    if level >= 5 and level < 7 then
+        maxLocks = 1
+    elseif level >= 7 then
+        maxLocks = 5
+    end
+
+    local lockCount = math.random(0, maxLocks)
+    local lockCandidates = {}
+
+    for i, brick in ipairs(bricks) do
+        if brick.inPlay then
+            table.insert(lockCandidates, i)
+        end
+    end
+
+    for i = 1, lockCount do
+        if #lockCandidates == 0 then
+            break
+        end
+
+        local idx = math.random(#lockCandidates)
+        local brick = bricks[lockCandidates[idx]]
+        brick:setAsLock()
+        table.remove(lockCandidates, idx)
+    end
+
+    return bricks, lockCount
 end

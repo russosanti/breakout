@@ -44,14 +44,15 @@ function PaddleSelectState:update(dt)
     -- select paddle and move on to the serve state, passing in the selection
     if love.keyboard.wasPressed('return') or love.keyboard.wasPressed('enter') then
         gSounds['confirm']:play()
-
+        local bricks, lockCount = LevelMaker.createMap(16)
         gStateMachine:change('serve', {
             paddle = Paddle(self.currentPaddle),
-            bricks = LevelMaker.createMap(1),
+            bricks = bricks,
+            lockCount = lockCount,
             health = 3,
             score = 0,
             highScores = self.highScores,
-            level = 1,
+            level = 16,
             recoverPoints = 5000
         })
     end

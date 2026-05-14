@@ -52,7 +52,10 @@ end
     we have to return a subset of GenerateQuads.
 ]]
 function GenerateQuadsBricks(atlas)
-    return table.slice(GenerateQuads(atlas, 32, 16), 1, 21)
+    local quads = GenerateQuads(atlas, 32, 16)
+    local bricks = table.slice(quads, 1, 21)
+    table.insert(bricks, quads[24])
+    return bricks
 end
 
 --[[

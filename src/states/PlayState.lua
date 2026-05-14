@@ -23,6 +23,7 @@ PlayState = Class{__includes = BaseState}
 function PlayState:enter(params)
     self.paddle = params.paddle
     self.bricks = params.bricks
+    self.lockCount = params.lockCount
     self.health = params.health
     self.score = params.score
     self.highScores = params.highScores
