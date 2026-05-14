@@ -10,6 +10,21 @@
     which the player gets to choose upon starting the game.
 ]]
 
+local SIZESCORE = {
+    [1] = 500,
+    [2] = 1000,
+    [3] = 2000
+}
+
+local PADDLE_WIDTHS = {
+    [1] = 32,
+    [2] = 64,
+    [3] = 96,
+    [4] = 128
+}
+
+local MAX_PADDLE_SIZE = 4
+
 Paddle = Class{}
 
 --[[
@@ -37,6 +52,8 @@ function Paddle:init(skin)
     -- the variant is which of the four paddle sizes we currently are; 2
     -- is the starting size, as the smallest is too tough to start with
     self.size = 2
+
+    self.nextSizeScore = SIZESCORE[self.size]
 end
 
 function Paddle:update(dt)
@@ -71,4 +88,38 @@ end
 function Paddle:render()
     love.graphics.draw(gTextures['main'], gFrames['paddles'][self.size + 4 * (self.skin - 1)],
         self.x, self.y)
+end
+
+--[[
+    Upgrade the paddle size.
+]]
+function Paddle:upgradeSize(score)
+    if self.size < MAX_PADDLE_SIZE then
+        self.size = self.size + 1
+        self:updateWidth()
+        self.nextSizeScore = self.size == MAX_PADDLE_SIZE and math.huge or score + SIZESCORE[self.size]
+    end
+end
+
+--[[
+    Downgrade the paddle size.
+]]
+function Paddle:downgradeSize(score)
+    if self.size > 2 then
+        self.size = 2
+    else
+        self.size = 1
+    end
+    self:updateWidth()
+    self.nextSizeScore = score + SIZESCORE[self.size]
+end
+
+--[[
+    Update the paddle width based on its current size.
+]]
+function Paddle:updateWidth()
+    local oldWidth = self.width
+    self.width = PADDLE_WIDTHS[self.size]
+    self.x = self.x + (oldWidth - self.width) / 2
+    self.x = math.max(0, math.min(VIRTUAL_WIDTH - self.width, self.x))
 end

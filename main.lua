@@ -123,6 +123,7 @@ function love.load()
     })
 
     -- play our music outside of all states and set it to looping
+    gSounds['music']:setVolume(0.6)
     gSounds['music']:play()
     gSounds['music']:setLooping(true)
 

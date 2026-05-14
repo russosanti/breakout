@@ -130,7 +130,6 @@ end
 ]]
 function GenerateQuadsPowerUps(atlas)
     local y = 192
-
     local quads = {}
 
     quads[1] = love.graphics.newQuad(16*2, y, 16, 16, atlas:getDimensions())

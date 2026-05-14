@@ -121,6 +121,13 @@ function PlayState:update(dt)
                     gSounds['recover']:play()
                 end
 
+                -- if we have enough points to upgrade the paddle, do so
+                if self.score >= self.paddle.nextSizeScore then
+                    self.paddle:upgradeSize(self.score)
+                    -- play recover sound effect
+                    gSounds['confirm']:play()
+                end
+
                 -- go to our victory screen if there are no more bricks left
                 if self:checkVictory() then
                     gSounds['victory']:play()
@@ -225,6 +232,7 @@ function PlayState:update(dt)
                 highScores = self.highScores
             })
         else
+            self.paddle:downgradeSize(self.score)
             gStateMachine:change('serve', {
                 paddle = self.paddle,
                 bricks = self.bricks,
