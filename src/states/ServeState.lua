@@ -21,6 +21,7 @@ function ServeState:enter(params)
     self.paddle = params.paddle
     self.bricks = params.bricks
     self.lockCount = params.lockCount
+    self.keyCount = 0
     self.health = params.health
     self.score = params.score
     self.highScores = params.highScores
@@ -44,6 +45,7 @@ function ServeState:update(dt)
             paddle = self.paddle,
             bricks = self.bricks,
             lockCount = self.lockCount,
+            keyCount = self.keyCount,
             health = self.health,
             score = self.score,
             highScores = self.highScores,
@@ -66,6 +68,7 @@ function ServeState:render()
         brick:render()
     end
 
+    renderKeyCount(self.keyCount)
     renderScore(self.score)
     renderHealth(self.health)
 

@@ -37,12 +37,8 @@ function LevelMaker.createMap(level)
     local numCols = math.random(7, 13)
     numCols = numCols % 2 == 0 and (numCols + 1) or numCols
 
-    -- highest possible spawned brick color in this level; ensure we
-    -- don't go above 3
-    local highestTier = math.min(3, math.floor(level / 5))
-
-    -- highest color of the highest tier, no higher than 5
-    local highestColor = math.min(5, level % 5 + 3)
+    -- highest tier and color of the bricks will be based on the level
+    local highestTier, highestColor = highestTierAndColor(level)
 
     -- lay out bricks such that they touch each other and fill the space
     for y = 1, numRows do
@@ -157,4 +153,15 @@ function createLockBricks(level, bricks)
     end
 
     return bricks, lockCount
+end
+
+function highestTierAndColor(level)
+    local highestTier = math.min(3, math.floor(level / 5))
+    local highestColor = math.min(5, level % 5 + 3)
+    return highestTier, highestColor
+end
+
+function randomTierAndColor(level)
+    local highestTier, highestColor = highestTierAndColor(level)
+    return math.random(0, highestTier), math.random(1, highestColor)
 end

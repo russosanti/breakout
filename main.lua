@@ -96,6 +96,7 @@ function love.load()
         ['victory'] = love.audio.newSource('sounds/victory.wav', 'static'),
         ['recover'] = love.audio.newSource('sounds/recover.wav', 'static'),
         ['high-score'] = love.audio.newSource('sounds/high_score.wav', 'static'),
+        ['unlock'] = love.audio.newSource('sounds/unlock.wav', 'static'),
         ['pause'] = love.audio.newSource('sounds/pause.wav', 'static'),
 
         ['music'] = love.audio.newSource('sounds/music.wav', 'static')
@@ -307,4 +308,17 @@ function renderScore(score)
     love.graphics.setFont(gFonts['small'])
     love.graphics.print('Score:', VIRTUAL_WIDTH - 60, 5)
     love.graphics.printf(tostring(score), VIRTUAL_WIDTH - 50, 5, 40, 'right')
+end
+
+--[[
+    Render key power ups
+]]
+function renderKeyCount(keyCount)
+    love.graphics.setFont(gFonts['small'])
+
+    local keyX = VIRTUAL_WIDTH - 127
+    local keyY = 4
+
+    love.graphics.draw(gTextures['main'], gFrames['powers'][3], keyX, keyY, 0, 0.6, 0.6)
+    love.graphics.print('x' .. tostring(keyCount), keyX + 12, keyY + 1)
 end

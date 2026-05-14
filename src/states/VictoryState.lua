@@ -37,6 +37,7 @@ function VictoryState:update(dt)
             level = self.level + 1,
             bricks = bricks,
             lockCount = lockCount,
+            keyCount = 0,
             paddle = self.paddle,
             health = self.health,
             score = self.score,

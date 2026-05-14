@@ -24,6 +24,7 @@ function PlayState:enter(params)
     self.paddle = params.paddle
     self.bricks = params.bricks
     self.lockCount = params.lockCount
+    self.keyCount = params.keyCount
     self.health = params.health
     self.score = params.score
     self.highScores = params.highScores
@@ -94,19 +95,35 @@ function PlayState:update(dt)
 
             -- only check collision if we're in play
             if brick.inPlay and ball:collides(brick) then
-
-                -- add to score
-                self.score = self.score + (brick.tier * 200 + brick.color * 25)
-
-                -- trigger the brick's hit function, which removes it from play
-                brick:hit()
+                
+                -- If brick is lock and have a key
+                if brick.isLock then
+                    if self.keyCount > 0 then
+                        self.score = self.score + 1000
+                        self.keyCount = self.keyCount - 1
+                        self.lockCount = self.lockCount - 1
+                        brick:unlock(self.level)
+                    else
+                        gSounds['wall-hit']:play()
+                    end
+                else
+                    -- add to score
+                    self.score = self.score + (brick.tier * 200 + brick.color * 25)
+                    -- trigger the brick's hit function, which removes it from play
+                    brick:hit()
+                end
 
                 if math.random(4) == 1 then
-                --if brick.inPlay == false and math.random(4) == 1 then
-                    local type = 2
-                    if self.health < 3 and math.random(10) == 1 then
-                        type = 1
+                --if (brick.inPlay == false or brick.isLock) and math.random(4) == 1 then
+                    local pool = {2,2,2}
+                    if self.health < 3 and math.random(2) == 1 then
+                        table.insert(pool, 1)
                     end
+                    if self.keyCount < self.lockCount then
+                        table.insert(pool, 3)
+                        table.insert(pool, 3)
+                    end
+                    local type = pool[math.random(#pool)]
                     table.insert(self.powerUps, PowerUp(type, brick.x + brick.width / 2 - 8, brick.y))
                 end
 
@@ -208,7 +225,10 @@ function PlayState:update(dt)
             if power.type == 1 and self.health < 3 then
                 self.health = self.health + 1
                 gSounds['recover']:play()
-            elseif power.type == 2 then
+            elseif power.type == 3 then
+                -- Key logic
+                self.keyCount = self.keyCount + 1
+            else
                 -- Two balls logic
                 self:newBall()
                 self:newBall()
@@ -237,6 +257,7 @@ function PlayState:update(dt)
             gStateMachine:change('serve', {
                 paddle = self.paddle,
                 bricks = self.bricks,
+                lockCount = self.lockCount,
                 health = self.health,
                 score = self.score,
                 highScores = self.highScores,
@@ -281,6 +302,7 @@ function PlayState:render()
         ball:render()
     end
 
+    renderKeyCount(self.keyCount)
     renderScore(self.score)
     renderHealth(self.health)
 

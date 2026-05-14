@@ -164,3 +164,12 @@ function Brick:setAsLock()
     self.tier = 0
     self.color = 1
 end
+
+--[[
+    Set Lock Brick as a lock block
+]]
+function Brick:unlock(level)
+    self.tier, self.color = randomTierAndColor(level)
+    self.isLock = false
+    gSounds['unlock']:play()
+end
