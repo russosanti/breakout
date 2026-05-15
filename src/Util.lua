@@ -46,6 +46,18 @@ function table.slice(tbl, first, last, step)
     return sliced
 end
 
+function Collides(a, b)
+    if a.x > b.x + b.width or b.x > a.x + a.width then
+        return false
+    end
+
+    if a.y > b.y + b.height or b.y > a.y + a.height then
+        return false
+    end
+
+    return true
+end
+
 --[[
     This function is specifically made to piece out the bricks from the
     sprite sheet. Since the sprite sheet has non-uniform sprites within,

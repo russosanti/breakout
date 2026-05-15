@@ -15,6 +15,10 @@ Class = require 'lib.class'
 -- a few global constants, centralized
 require 'src.constants'
 
+-- utility functions, mainly for splitting our sprite sheet into various Quads
+-- of differing sizes for paddles, balls, bricks, etc.
+require 'src.Util'
+
 -- the ball that travels around, breaking bricks and triggering lives lost
 require 'src.Ball'
 
@@ -33,10 +37,6 @@ require 'src.Paddle'
 -- a basic StateMachine class which will allow us to transition to and from
 -- game states smoothly and avoid monolithic code in one file
 require 'src.StateMachine'
-
--- utility functions, mainly for splitting our sprite sheet into various Quads
--- of differing sizes for paddles, balls, bricks, etc.
-require 'src.Util'
 
 -- each of the individual states our game can be in at once; each state has
 -- its own update and render methods that can be called by our state machine

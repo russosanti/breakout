@@ -22,6 +22,9 @@ NONE = 4            -- no blocks this row
 
 LevelMaker = Class{}
 
+local createLockBricks
+local highestTierAndColor
+
 --[[
     Creates a table of Bricks to be returned to the main game, with different
     possible ways of randomizing rows and columns of bricks. Calculates the
@@ -77,7 +80,7 @@ function LevelMaker.createMap(level)
                 skipFlag = not skipFlag
             end
 
-            b = Brick(
+            local b = Brick(
                 -- x-coordinate
                 (x-1)                   -- decrement x by 1 because tables are 1-indexed, coords are 0
                 * 32                    -- multiply by 32, the brick width
@@ -114,7 +117,7 @@ function LevelMaker.createMap(level)
 
     -- in the event we didn't generate any bricks, try again
     if #bricks == 0 then
-        return self.createMap(level)
+        return LevelMaker.createMap(level)
     else
         return createLockBricks(level, bricks)
     end
@@ -124,7 +127,7 @@ end
 --[[
     Randomly set some bricks as lock bricks based on the level.
 ]]
-function createLockBricks(level, bricks)
+createLockBricks = function(level, bricks)
     local maxLocks = 0
     if level >= 5 and level < 7 then
         maxLocks = 1
@@ -155,13 +158,13 @@ function createLockBricks(level, bricks)
     return bricks, lockCount
 end
 
-function highestTierAndColor(level)
+highestTierAndColor = function(level)
     local highestTier = math.min(3, math.floor(level / 5))
     local highestColor = math.min(5, level % 5 + 3)
     return highestTier, highestColor
 end
 
-function randomTierAndColor(level)
+function LevelMaker.randomTierAndColor(level)
     local highestTier, highestColor = highestTierAndColor(level)
     return math.random(0, highestTier), math.random(1, highestColor)
 end
